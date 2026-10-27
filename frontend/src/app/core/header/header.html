@@ -1,23 +1,28 @@
-<header>
-    <div class="header">
-        <div>
-            <p>SKY</p>
-        </div>
-        <nav>
-            <ul>
-                <li><a routerLink="/trip/home">Home</a></li>
-                <li><a routerLink="/">Check-In</a></li>
-                <li><a routerLink="/">Mis Viajes</a></li>
-                <li><a routerLink="/">Centro de ayuda</a></li>
-            </ul>
-        </nav>
-        <div>
-            <div>
-                <img src="  icons/user-svgrepo-com.svg" alt="Usuario">
-            </div>
-            <div>
-                <a routerLink="/auth/login">Iniciar Sesion</a>
-            </div>
+<header class="site-header">
+    <div class="site-header__inner">
+        <a class="site-header__logo" routerLink="/trip/home" aria-label="SKY Airline, inicio">SKY</a>
+
+        <button type="button" class="site-header__toggle" (click)="menuOpen.set(!menuOpen())"
+            [attr.aria-expanded]="menuOpen()" aria-controls="menu-principal">Menú</button>
+
+        <ul class="site-header__nav" id="menu-principal" [class.open]="menuOpen()" (click)="menuOpen.set(false)">
+            <li><a routerLink="/trip/home" routerLinkActive="active">Home</a></li>
+            <li><a routerLink="/trip/flights" routerLinkActive="active">Vuelos</a></li>
+            <li><a routerLink="/trip/check-in" routerLinkActive="active">Check-In</a></li>
+            <li><a routerLink="/trip/my-trips" routerLinkActive="active">Mis Viajes</a></li>
+            <li><a routerLink="/trip/baggage-tracking" routerLinkActive="active">Rastrear equipaje</a></li>
+            <li><a routerLink="/trip/help" routerLinkActive="active">Centro de ayuda</a></li>
+        </ul>
+
+        <div class="site-header__user">
+            <img src="icons/user-svgrepo-com.svg" alt="" width="18" height="18">
+            @if (auth.cliente(); as c) {
+                <span>Hola, {{ c.nombre.split(' ')[0] }}</span>
+                <span class="sep" aria-hidden="true">|</span>
+                <button type="button" (click)="auth.logout()">Cerrar sesión</button>
+            } @else {
+                <a routerLink="/auth/login">Iniciar sesión</a>
+            }
         </div>
     </div>
 </header>

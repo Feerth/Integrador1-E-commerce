@@ -1,0 +1,19 @@
+<div class="page">
+    <div class="page__head"><h1>Centro de ayuda</h1><p>Respuestas rápidas sobre equipaje, check-in y reservas.</p></div>
+    <div class="help-grid">
+        <div>
+            @for (g of faqs; track g.t) {
+                <h2>{{ g.t }}</h2>
+                @for (f of g.items; track f.q) {
+                    <details class="card faq"><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
+                }
+            }
+        </div>
+        <aside class="card contact">
+            <h2>¿Necesitas más ayuda?</h2>
+            <p>Escríbenos o llámanos con tu código de reserva o de equipaje a mano.</p>
+            <p><strong>Correo:</strong> ayuda&#64;skyairline.pe<br><strong>Teléfono:</strong> (01) 600 0000<br><strong>Horario:</strong> 24 horas</p>
+            <a class="btn btn--primary btn--block" routerLink="/trip/baggage-tracking">Rastrear mi equipaje</a>
+        </aside>
+    </div>
+</div>

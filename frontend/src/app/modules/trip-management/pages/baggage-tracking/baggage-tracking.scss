@@ -1,0 +1,21 @@
+@use 'utils/variables' as *;
+.search { display: flex; gap: 12px; align-items: end; margin-bottom: 16px; .field { flex: 1; margin: 0; input { text-transform: uppercase; font-weight: 700; } } .btn { height: 44px; } }
+.mine { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; font-size: 14px; }
+.chip { border: 1px solid #ddd; background: #fff; border-radius: 999px; padding: 4px 12px; font: 700 13px inherit; cursor: pointer; &:hover { border-color: $color-primario; color: $color-primario; } }
+.res { &__head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; small { color: $color-primario; font-weight: 800; letter-spacing: 1px; } h2 { margin: 2px 0 6px; font-size: 26px; } p { margin: 0 0 2px; color: $texto-muted; font-size: 14px; } }
+  h3 { margin: 24px 0 12px; font-size: 16px; } .upd { color: $texto-muted; display: block; margin-top: 16px; } }
+.steps { list-style: none; display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 0; margin: 20px 0 0; counter-reset: s;
+  li { text-align: center; position: relative; font-size: 12px; color: $texto-muted;
+    &:not(:last-child)::after { content: ''; position: absolute; top: 15px; left: 55%; width: 90%; height: 3px; background: #e5e5e5; }
+    &.done:not(:last-child)::after { background: $color-primario; }
+    .dot { position: relative; z-index: 1; display: inline-flex; width: 32px; height: 32px; border-radius: 50%; background: #e5e5e5; color: #777; align-items: center; justify-content: center; font-weight: 800; }
+    .lbl { display: block; margin-top: 6px; }
+    &.done .dot { background: $color-primario; color: #fff; }
+    &.current .dot { background: #fff; border: 3px solid $color-primario; color: $color-primario; }
+    &.current .lbl { color: #1a1a1a; font-weight: 700; }
+    &.incident .dot { border-color: #b5082b; background: #fde4e8; } }
+  @media (max-width: 700px) { grid-template-columns: 1fr; li { text-align: left; display: flex; gap: 10px; align-items: center; &::after { display: none; } .lbl { margin: 0; } } } }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 18px; border-left: 3px solid #f0d0d6;
+  li { position: relative; padding: 0 0 16px 16px; display: flex; flex-direction: column; font-size: 14px;
+    &::before { content: ''; position: absolute; left: -26px; top: 4px; width: 11px; height: 11px; border-radius: 50%; background: $color-primario; }
+    span { color: #444; } time { color: $texto-muted; font-size: 12px; } em { color: #8f0620; font-size: 13px; } } }

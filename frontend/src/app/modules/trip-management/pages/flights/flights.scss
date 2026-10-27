@@ -1,0 +1,13 @@
+@use 'utils/variables' as *;
+.filters { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 12px; align-items: end; margin-bottom: 20px;
+  .field { margin: 0; } &__btn { height: 44px; }
+  @media (max-width: 850px) { grid-template-columns: 1fr 1fr; } }
+.flight { display: grid; grid-template-columns: 220px 1fr auto; gap: 24px; align-items: center; margin-bottom: 14px;
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+  &__route { display: flex; align-items: center; gap: 12px; div:not(.flight__line) { display: flex; flex-direction: column; strong { font-size: 22px; } span { color: $texto-muted; font-size: 13px; } } }
+  &__line { flex: 1; text-align: center; color: $color-primario; border-top: 1px dashed #ccc; line-height: 0; }
+  &__info { h2 { margin: 0 0 4px; font-size: 18px; } p { margin: 0 0 8px; color: $texto-muted; font-size: 13px; } }
+  &__cats { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  &__closed { color: $texto-muted; }
+}
+.cat { flex-direction: column; gap: 2px; padding: 8px 14px; span { font-size: 13px; } small { font-weight: 400; color: $texto-muted; } b { font-size: 15px; } }

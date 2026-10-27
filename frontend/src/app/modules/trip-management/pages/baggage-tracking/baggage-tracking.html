@@ -1,0 +1,66 @@
+<div class="page">
+    <div class="page__head">
+        <h1>Rastrea tu equipaje</h1>
+        <p>Ingresa el código de tu etiqueta de equipaje facturado (formato EQ-00000).</p>
+    </div>
+
+    <form class="search card" (ngSubmit)="buscar()">
+        <div class="field"><label for="codigo">Código de equipaje</label>
+            <input id="codigo" name="codigo" placeholder="EQ-00142" [(ngModel)]="codigo" autocomplete="off"></div>
+        <button class="btn btn--primary" [disabled]="loading() || !codigo.trim()">{{ loading() ? 'Buscando…' : 'Rastrear' }}</button>
+    </form>
+
+    @if (auth.logged() && mine().length) {
+        <div class="mine">
+            <span>Tus maletas:</span>
+            @for (b of mine(); track b.codigo) {
+                <button type="button" class="chip" (click)="elegir(b.codigo)">{{ b.codigo }} · {{ b.vuelo.codigo }}</button>
+            }
+        </div>
+    }
+
+    @if (error()) { <p class="alert alert--error" role="alert">{{ error() }}</p> }
+    @if (loading()) { <div class="spinner" role="status" aria-label="Buscando"></div> }
+
+    @if (result(); as r) {
+        <section class="card res" aria-live="polite">
+            <header class="res__head">
+                <div>
+                    <small>EQUIPAJE</small>
+                    <h2>{{ r.codigo }}</h2>
+                    <p>{{ r.pasajero }} · {{ r.categoriaPeso }}</p>
+                    <p>Vuelo {{ r.vuelo.codigo }} · {{ ciudad(r.vuelo.origen) }} → {{ ciudad(r.vuelo.destino) }} · {{ fechaLarga(r.vuelo.fecha) }} {{ r.vuelo.horaSalida }}</p>
+                </div>
+                <span class="badge" [class]="'badge ' + (esIncidencia(r.estado) ? 'badge--bad' : r.estado === 'ENTREGADO' ? 'badge--ok' : 'badge--info')">{{ etiqueta(r.estado) }}</span>
+            </header>
+
+            <p class="alert" [class]="'alert ' + (esIncidencia(r.estado) ? 'alert--error' : 'alert--ok')">
+                {{ detalle(r.estado) }}@if (r.observaciones) { <br><em>{{ r.observaciones }}</em> }
+            </p>
+            @if (esIncidencia(r.estado)) {
+                <p class="alert alert--warn">Si necesitas ayuda, escríbenos desde el <a routerLink="/trip/help">Centro de ayuda</a> indicando este código.</p>
+            }
+
+            <ol class="steps" aria-label="Progreso del equipaje">
+                @for (p of pasos; track p; let i = $index) {
+                    <li [class.done]="i < actual(r)" [class.current]="i === actual(r)" [class.incident]="i === actual(r) && esIncidencia(r.estado)">
+                        <span class="dot">{{ i < actual(r) ? '✓' : i + 1 }}</span><span class="lbl">{{ etiqueta(p) }}</span>
+                    </li>
+                }
+            </ol>
+
+            <h3>Historial de movimientos</h3>
+            <ul class="timeline">
+                @for (h of historialInverso(r); track $index) {
+                    <li>
+                        <strong>{{ etiqueta(h.estado) }}</strong>
+                        <span>{{ h.punto }}</span>
+                        <time>{{ fechaHora(h.fecha) }}</time>
+                        @if (h.observacion) { <em>{{ h.observacion }}</em> }
+                    </li>
+                }
+            </ul>
+            @if (updated()) { <small class="upd">Actualizado {{ fechaHora(updated()!.toISOString()) }} · se refresca cada 30 s</small> }
+        </section>
+    }
+</div>

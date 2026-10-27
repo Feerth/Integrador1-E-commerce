@@ -1,0 +1,42 @@
+<div class="page">
+    <div class="page__head">
+        <h1>Mis viajes</h1>
+        <p>Hola {{ auth.cliente()?.nombre }} — tus reservas, check-in y equipaje en un solo lugar.</p>
+    </div>
+    @if (error()) { <p class="alert alert--error" role="alert">{{ error() }}</p> }
+    @if (loading()) { <div class="spinner" role="status" aria-label="Cargando"></div> }
+    @else if (trips().length === 0) {
+        <div class="empty">Aún no tienes reservas. <a routerLink="/trip/flights" style="color:#C8102E;font-weight:700">Busca un vuelo</a></div>
+    } @else {
+        @for (t of trips(); track t.codigo) {
+            <article class="trip card">
+                <header class="trip__head">
+                    <div><h2>{{ t.ruta }}</h2><p>{{ t.codigo }} · Vuelo {{ t.vueloCodigo }} · {{ fechaLarga(t.fecha) }}@if (t.vuelo) { · {{ t.vuelo.horaSalida }} }</p></div>
+                    <div class="trip__badges">
+                        <span class="badge" [class]="'badge ' + badge(t.estado)">{{ etiquetaReserva(t.estado) }}</span>
+                        @if (t.vuelo) { <span class="badge">Vuelo {{ etiquetaVuelo(t.vuelo.estado).toLowerCase() }}</span> }
+                    </div>
+                </header>
+                <dl class="trip__meta">
+                    <div><dt>Asiento</dt><dd>{{ t.asiento }}</dd></div>
+                    <div><dt>Categoría</dt><dd>{{ t.categoria }}</dd></div>
+                    <div><dt>Check-in</dt><dd>{{ t.checkin ? 'Realizado · Puerta ' + t.checkin.puerta : 'Pendiente' }}</dd></div>
+                </dl>
+                @if (bagsOf(t).length) {
+                    <div class="trip__bags">
+                        <strong>Equipaje</strong>
+                        @for (b of bagsOf(t); track b.codigo) {
+                            <a [routerLink]="['/trip/baggage-tracking']" [queryParams]="{ codigo: b.codigo }" class="bag-chip">
+                                {{ b.codigo }} <span class="badge" [class]="'badge ' + (esIncidencia(b.estado) ? 'badge--bad' : 'badge--info')">{{ etiquetaEquipaje(b.estado) }}</span>
+                            </a>
+                        }
+                    </div>
+                }
+                <footer class="trip__actions">
+                    @if (t.checkinAbierto) { <a class="btn btn--primary" routerLink="/trip/check-in">Hacer check-in</a> }
+                    @else if (t.checkinMotivo) { <small>{{ t.checkinMotivo }}</small> }
+                </footer>
+            </article>
+        }
+    }
+</div>

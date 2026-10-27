@@ -1,0 +1,58 @@
+<div class="page">
+    <div class="page__head">
+        <h1>Vuelos disponibles</h1>
+        <p>Los asientos y estados se leen del mismo sistema que usa nuestro personal.</p>
+    </div>
+
+    <form class="filters card" (ngSubmit)="buscar()">
+        <div class="field"><label for="o">Origen</label><input id="o" name="o" [(ngModel)]="q.origen" placeholder="Ej. Lima"></div>
+        <div class="field"><label for="d">Destino</label><input id="d" name="d" [(ngModel)]="q.destino" placeholder="Ej. Cusco"></div>
+        <div class="field"><label for="f">Fecha</label><input id="f" name="f" type="date" [(ngModel)]="q.fecha"></div>
+        <div class="field"><label for="c">Categoría</label>
+            <select id="c" name="c" [(ngModel)]="categoria">
+                <option value="">Todas</option><option>Económico</option><option>Económico Premium</option><option>Business</option>
+            </select></div>
+        <button class="btn btn--primary filters__btn">Buscar</button>
+    </form>
+
+    @if (confirmada(); as c) {
+        <div class="alert alert--ok" role="status">
+            <strong>¡Reserva confirmada!</strong> Código <strong>{{ c.reserva.codigo }}</strong> · Vuelo {{ c.vuelo.codigo }} ·
+            Asiento {{ c.reserva.asiento }} ({{ c.reserva.categoria }})
+            @if (c.precio) { · Tarifa referencial S/ {{ c.precio }} }
+            — <a routerLink="/trip/my-trips">Ver mis viajes</a>
+        </div>
+    }
+    @if (error()) { <p class="alert alert--error" role="alert">{{ error() }}</p> }
+
+    @if (loading()) { <div class="spinner" role="status" aria-label="Cargando"></div> }
+    @else if (visibles().length === 0) { <div class="empty">No encontramos vuelos con esos filtros. Prueba otra fecha o quita filtros.</div> }
+    @else {
+        @for (v of visibles(); track v.codigo) {
+            <article class="flight card">
+                <div class="flight__route">
+                    <div><strong>{{ v.horaSalida }}</strong><span>{{ iata(v.origen) }}</span></div>
+                    <div class="flight__line" aria-hidden="true">✈</div>
+                    <div><strong>{{ v.horaLlegadaEstimada }}</strong><span>{{ iata(v.destino) }}</span></div>
+                </div>
+                <div class="flight__info">
+                    <h2>{{ ciudad(v.origen) }} → {{ ciudad(v.destino) }}</h2>
+                    <p>{{ v.codigo }} · {{ fechaLarga(v.fecha) }} · {{ v.modeloAvion }}</p>
+                    <span class="badge" [class]="'badge ' + badge(v.estado)">{{ etiquetaVuelo(v.estado) }}</span>
+                </div>
+                <div class="flight__cats">
+                    @for (c of v.categorias; track c.categoria) {
+                        <button class="btn btn--ghost cat" type="button"
+                            [disabled]="!v.reservable || c.disponibles === 0 || booking() !== ''"
+                            (click)="reservar(v, c.categoria)">
+                            <span>{{ c.categoria }}</span>
+                            <small>{{ c.disponibles === 0 ? 'Agotado' : c.disponibles + ' asientos' }}</small>
+                            @if (c.precio) { <b>S/ {{ c.precio }}</b> }
+                        </button>
+                    }
+                    @if (!v.reservable) { <small class="flight__closed">No disponible para reserva</small> }
+                </div>
+            </article>
+        }
+    }
+</div>

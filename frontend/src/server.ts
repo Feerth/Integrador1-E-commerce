@@ -6,23 +6,29 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { createApi, createStore } from './backend';
+import { httpsRedirect, securityHeaders } from './backend/security';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+// Detrás de un proxy (hosting con HTTPS) para que req.ip y req.secure sean los reales.
+app.set('trust proxy', process.env['TRUST_PROXY'] ?? 1);
+app.disable('x-powered-by');
+app.use(httpsRedirect());
+app.use(securityHeaders);
+
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * API REST de la web. Lee y escribe en la MISMA base MongoDB del programa de escritorio
+ * (o en modo demo en memoria si Mongo no está disponible). Ver src/backend/.
  */
+const apiRouter = createStore().then(createApi);
+app.use('/api', (req, res, next) => {
+  apiRouter.then((router) => router(req, res, next)).catch(next);
+});
+
 
 /**
  * Serve static files from /browser

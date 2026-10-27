@@ -1,0 +1,39 @@
+<div class="page">
+    <div class="page__head">
+        <h1>Check-in en línea</h1>
+        <p>Disponible entre 48 y 2 horas antes de la salida de tu vuelo.</p>
+    </div>
+    @if (error()) { <p class="alert alert--error" role="alert">{{ error() }}</p> }
+    @if (loading()) { <div class="spinner" role="status" aria-label="Cargando"></div> }
+    @else if (trips().length === 0) {
+        <div class="empty">No tienes reservas confirmadas. <a routerLink="/trip/flights" style="color:#C8102E;font-weight:700">Busca un vuelo</a></div>
+    } @else {
+        @for (t of trips(); track t.codigo) {
+            @if (t.checkin; as c) {
+                <article class="pass">
+                    <div class="pass__main">
+                        <small>PASE DE ABORDAR</small>
+                        <h2>{{ t.ruta }}</h2>
+                        <p>{{ auth.cliente()?.nombre }}</p>
+                        <p class="pass__sub">Vuelo {{ t.vueloCodigo }} · {{ fechaLarga(t.fecha) }}</p>
+                    </div>
+                    <dl class="pass__grid">
+                        <div><dt>Asiento</dt><dd>{{ t.asiento }}</dd></div>
+                        <div><dt>Puerta</dt><dd>{{ c.puerta }}</dd></div>
+                        <div><dt>Grupo</dt><dd>{{ c.grupo }}</dd></div>
+                        <div><dt>Embarque</dt><dd>{{ embarque(t) }}</dd></div>
+                        <div><dt>Salida</dt><dd>{{ t.vuelo?.horaSalida }}</dd></div>
+                        <div><dt>Reserva</dt><dd>{{ t.codigo }}</dd></div>
+                    </dl>
+                </article>
+            } @else {
+                <article class="card ci">
+                    <div><h2>{{ t.ruta }}</h2><p>{{ t.codigo }} · Vuelo {{ t.vueloCodigo }} · {{ fechaLarga(t.fecha) }} {{ t.vuelo?.horaSalida }} · Asiento {{ t.asiento }}</p></div>
+                    @if (t.checkinAbierto) {
+                        <button class="btn btn--primary" (click)="hacer(t)" [disabled]="working() !== ''">{{ working() === t.codigo ? 'Procesando…' : 'Hacer check-in' }}</button>
+                    } @else { <small>{{ t.checkinMotivo }}</small> }
+                </article>
+            }
+        }
+    }
+</div>

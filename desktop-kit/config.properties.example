@@ -1,0 +1,3 @@
+# Copiar a config.properties (NO subir a Git: ya está en .gitignore) o usar variables de entorno MONGO_URI / MONGO_DB.
+mongo.uri=mongodb://localhost:27017
+mongo.db=skyairline

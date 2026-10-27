@@ -1,0 +1,8 @@
+@use 'utils/variables' as *;
+.ci { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; h2 { margin: 0 0 4px; font-size: 18px; } p { margin: 0; color: $texto-muted; font-size: 13px; } small { color: $texto-muted; max-width: 260px; } }
+.pass { display: grid; grid-template-columns: 1fr 1.2fr; background: #fff; border-radius: 14px; border-left: 8px solid $color-primario; box-shadow: 0 4px 16px rgba(0,0,0,.08); margin-bottom: 16px; overflow: hidden;
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+  &__main { padding: 20px 24px; border-right: 2px dashed #e5e5e5; small { color: $color-primario; font-weight: 800; letter-spacing: 1px; } h2 { margin: 6px 0; font-size: 22px; } p { margin: 0; } }
+  &__sub { color: $texto-muted; font-size: 13px; margin-top: 4px !important; }
+  &__grid { margin: 0; padding: 20px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; dt { font-size: 11px; color: $texto-muted; text-transform: uppercase; font-weight: 700; } dd { margin: 2px 0 0; font-size: 20px; font-weight: 800; } }
+}

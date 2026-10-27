@@ -1,0 +1,9 @@
+@use 'utils/variables' as *;
+.trip { margin-bottom: 16px;
+  &__head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; h2 { margin: 0 0 4px; font-size: 20px; } p { margin: 0; color: $texto-muted; font-size: 13px; } }
+  &__badges { display: flex; gap: 6px; align-items: flex-start; }
+  &__meta { display: flex; gap: 32px; flex-wrap: wrap; margin: 16px 0; div { display: flex; flex-direction: column; } dt { font-size: 11px; color: $texto-muted; text-transform: uppercase; font-weight: 700; } dd { margin: 2px 0 0; font-weight: 700; } }
+  &__bags { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; font-size: 14px; }
+  &__actions small { color: $texto-muted; }
+}
+.bag-chip { display: inline-flex; gap: 8px; align-items: center; border: 1px solid #e5e5e5; border-radius: 999px; padding: 4px 10px; text-decoration: none; color: inherit; font-size: 13px; font-weight: 700; &:hover { border-color: $color-primario; } }
