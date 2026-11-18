@@ -3,3 +3,9 @@ allowBuilds:
   esbuild: true
   lmdb: true
   msgpackr-extract: true
+
+overrides:
+  source-map-js: 1.2.2
+  zod: 4.6.6
+  body-parser: 2.4.0
+  qs: 6.16.1
